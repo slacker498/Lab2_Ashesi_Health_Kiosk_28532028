@@ -1,8 +1,12 @@
-Name of author: Jachin Hugh Dzidumor Kpogli 
-ID: 28532028
-Name of project: Ashesi Health Kiosk
-Lab Number: 2
-Date created: 27th September, 2025
+## Name of author: Jachin Hugh Dzidumor Kpogli 
+
+## ID: 28532028
+
+## Name of project: Ashesi Health Kiosk
+
+## Lab Number: 2
+
+## Date created: 27th September, 2025
 
 ## Folder Structure
 
