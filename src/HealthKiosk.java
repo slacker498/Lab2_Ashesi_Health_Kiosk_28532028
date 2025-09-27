@@ -27,7 +27,7 @@ public class HealthKiosk {
 
         System.out.println( "\nGo to: " + 
             switch (serviceCode) {
-                case 'p', 'P'-> "Pharamacy Desk";
+                case 'p', 'P'-> "Pharmacy Desk";
                 case 'l', 'L'-> "Lab Desk";
                 case 't', 'T'-> "Triage Desk";
                 case 'c', 'C'-> "Counselling Desk";
@@ -56,8 +56,8 @@ public class HealthKiosk {
                     // Compute BMI and display BMI category
                     bmi = Math.round((weight/Math.pow(height, 2)) * 10) / 10.0;
                     if (bmi < 18.5) System.out.println("Category: Underweight");
-                    else if (bmi>=18.5 || bmi<=24.9) System.out.println("Category: Normal");
-                    else if (bmi>=25.0 || bmi<=29.9) System.out.println("Category: Overweight");
+                    else if (bmi>=18.5 && bmi<=24.9) System.out.println("Category: Normal");
+                    else if (bmi>=25.0 && bmi<=29.9) System.out.println("Category: Overweight");
                     else if (bmi >= 30) System.out.println("Category: Obese");
 
                     break;
@@ -67,9 +67,9 @@ public class HealthKiosk {
                     double requiredDosage = sc.nextDouble();
 
                     // Compute and display number of tablets
-                    final short tabletsDispensedByPharamacy = 250;
-                    int tablets = (int) (Math.ceil(requiredDosage) / tabletsDispensedByPharamacy);
-                    System.out.println(tablets);
+                    final int tabletsDispensedByPharmacy = 250;
+                    int tablets = (int) (Math.ceil(requiredDosage / tabletsDispensedByPharmacy));
+                    System.out.println("Number of tablets: " + tablets);
                     
                     break;
                 case 3: // Simple trig helper
@@ -92,7 +92,7 @@ public class HealthKiosk {
 
         // Task 3 — ID Sanity Check (focus: characters & strings)
         // Generate student ID
-        char randomUpperCharacter = (char) (65 + (Math.random() * (26+1)));
+        char randomUpperCharacter = (char) (65 + (Math.random() * (26)));
         byte randomNum1 = (byte) (3 + (Math.random()*7));
         byte randomNum2 = (byte) (3 + (Math.random()*7));
         byte randomNum3 = (byte) (3 + (Math.random()*7));
@@ -103,16 +103,16 @@ public class HealthKiosk {
         boolean isValidShortCode = (shortCode.length() == 5) && (Character.isLetter(shortCode.charAt(0))) && (Character.isDigit(shortCode.charAt(1))) && (Character.isDigit(shortCode.charAt(2))) && (Character.isDigit(shortCode.charAt(3))) && (Character.isDigit(shortCode.charAt(4)));
 
         if (isValidShortCode) System.out.println("ID OK");
-        else if (Character.isLetter(shortCode.charAt(0))) System.out.println("Invalid: first char must be a letter");
-        else if (shortCode.length() == 5) System.out.println("Invalid length");
+        else if (shortCode.length() != 5) System.out.println("Invalid length");
+        else if (!Character.isLetter(shortCode.charAt(0))) System.out.println("Invalid: first char must be a letter");
         else System.out.println("Invalid: last 4 must be digits");
 
 
         // Task 4 — “Secure” Display Code (focus: char arithmetic & strings)
-        System.out.println("\nEnter your first name: "); // Accept user input for sstudent first name
+        System.out.println("\nEnter your first name: "); // Accept user input for student first name
         String studentFirstName = sc.next();
 
-        char base = studentFirstName.charAt(0);
+        char base = (studentFirstName.toUpperCase()).charAt(0);
         char shiftedLetter= (char) ('A' + (base - 'A' + 2) % 26);
         
         // Generate secure code
