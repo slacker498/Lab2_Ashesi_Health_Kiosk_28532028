@@ -1,6 +1,12 @@
-## Getting Started
+## Name of author: Jachin Hugh Dzidumor Kpogli 
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+## ID: 28532028
+
+## Name of project: Ashesi Health Kiosk
+
+## Lab Number: 2
+
+## Date created: 27th September, 2025
 
 ## Folder Structure
 
