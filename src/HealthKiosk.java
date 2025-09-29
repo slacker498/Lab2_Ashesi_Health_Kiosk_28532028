@@ -132,9 +132,13 @@ public class HealthKiosk {
         System.out.println( "\nSummary: " + 
             switch (serviceCode) {
                 case 'P'-> "PHARMACY | ID=" + shortCode + " | Code=" + secureCode;
-                case 'T'-> {if (healthMetric == 1) yield "TRIAGE | ID=" + shortCode + " | BMI=" + metricData + " | Code=" + secureCode;
-                           else if (healthMetric == 1) yield "TRIAGE | ID=" + shortCode + " | Tablets=" + metricData + " | Code=" + secureCode;
-                           else yield "TRIAGE | ID=" + shortCode + " | sin(angle)=" + metricData + " | Code=" + secureCode;}
+                case 'T'-> {
+                           String metricComponent;
+                           if (healthMetric == 1) metricComponent = " | BMI=" + metricData;
+                           else if (healthMetric == 2) metricComponent =  " | Tablets=" + (Math.round(metricData));
+                           else metricComponent = " | sin(angle)=" + metricData;
+                           yield "TRIAGE | ID=" + shortCode + metricComponent + " | Code=" + secureCode;
+                        }
                 case 'L'-> "LAB | ID=" + shortCode + " | Code=" + secureCode;
                 case 'C'-> "COUNSELLING | ID=" + shortCode + " | Code=" + secureCode;
                 default -> "Invalid service code"; 
