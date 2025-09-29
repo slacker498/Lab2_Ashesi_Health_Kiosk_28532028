@@ -23,14 +23,14 @@ public class HealthKiosk {
 
         // Task 1 — Service Router (focus: switch)
         System.out.println("Enter service code (P/L/T/C): ");
-        char serviceCode = (sc.next()).charAt(0); // Accept input for service code
+        char serviceCode = Character.toUpperCase((sc.next()).charAt(0)); // Accept input for service code
 
         System.out.println( "\nGo to: " + 
             switch (serviceCode) {
-                case 'p', 'P'-> "Pharmacy Desk";
-                case 'l', 'L'-> "Lab Desk";
-                case 't', 'T'-> "Triage Desk";
-                case 'c', 'C'-> "Counselling Desk";
+                case 'P'-> "Pharmacy Desk";
+                case 'L'-> "Lab Desk";
+                case 'T'-> "Triage Desk";
+                case 'C'-> "Counselling Desk";
                 default -> "Invalid service code";
             }
         );
@@ -39,9 +39,9 @@ public class HealthKiosk {
         // Task 2 — Mini Health Metric (focus: Math functions)
         // Code executes if Triage has been selected
         byte healthMetric = 0; // To be used if triage is chosen (to allow for local variable to be used globally)
-        double bmi = 0; // To be used if triage and bmi are chosen (to allow for local variable to be used globally)
+        double metricData = 0; // To be used if triage and bmi are chosen (to allow for local variable to be used globally)
  
-        if (serviceCode=='t' || serviceCode=='T') {
+        if (serviceCode=='T') {
             System.out.println("Enter the health metric (1 for BMI, 2 for Dosage round-up, 3 for simple trig helper): ");
             healthMetric = sc.nextByte();     
 
@@ -54,11 +54,13 @@ public class HealthKiosk {
                     double height = sc.nextDouble();
 
                     // Compute BMI and display BMI category
-                    bmi = Math.round((weight/Math.pow(height, 2)) * 10) / 10.0;
+                    double bmi = Math.round((weight/Math.pow(height, 2)) * 10) / 10.0;
                     if (bmi < 18.5) System.out.println("Category: Underweight");
                     else if (bmi>=18.5 && bmi<=24.9) System.out.println("Category: Normal");
                     else if (bmi>=25.0 && bmi<=29.9) System.out.println("Category: Overweight");
                     else if (bmi >= 30) System.out.println("Category: Obese");
+
+                    metricData = bmi; // Store metric value if used
 
                     break;
                 case 2: // Dosage round-up
@@ -71,18 +73,23 @@ public class HealthKiosk {
                     int tablets = (int) (Math.ceil(requiredDosage / tabletsDispensedByPharmacy));
                     System.out.println("Number of tablets: " + tablets);
                     
+                    metricData = tablets; // Store metric value if used
+
                     break;
                 case 3: // Simple trig helper
                     // Accept user input for angle in degrees
                     System.out.println("Enter an angle in degrees: ");
                     double angleInDegrees = sc.nextDouble();
 
-                    // Compute and display computed sin and cos of angle, where angle is is radians
-                    double angleInRadians = Math.round(Math.toRadians(angleInDegrees) * 1000) / 1000.0;
-                    double sineOfAngle = Math.sin(angleInRadians);
-                    double cosOfAngle = Math.cos(angleInRadians);
+                    // Compute and display computed sin and cos of angle, where angle is in radians
+                    double angleInRadians = Math.toRadians(angleInDegrees);
+                    double sineOfAngle = Math.round(Math.sin(angleInRadians) * 1000) / 1000.0;
+                    double cosOfAngle = Math.round(Math.cos(angleInRadians) * 1000) / 1000.0;
 
                     System.out.printf("sin(%0.3f) = %0.3f and cos(%0.3f) = %0.3f, where angles are in degrees.\n", angleInDegrees, sineOfAngle, angleInDegrees, cosOfAngle);
+                    
+                    metricData = sineOfAngle; // Store metric value if used
+                    
                     break;
                 default:
                     System.out.println("Invalid input!");
@@ -93,10 +100,10 @@ public class HealthKiosk {
         // Task 3 — ID Sanity Check (focus: characters & strings)
         // Generate student ID
         char randomUpperCharacter = (char) (65 + (Math.random() * (26)));
-        byte randomNum1 = (byte) (3 + (Math.random()*7));
-        byte randomNum2 = (byte) (3 + (Math.random()*7));
-        byte randomNum3 = (byte) (3 + (Math.random()*7));
-        byte randomNum4 = (byte) (3 + (Math.random()*7));
+        byte randomNum1 = (byte) (3 + (int) (Math.random()*7));
+        byte randomNum2 = (byte) (3 + (int) (Math.random()*7));
+        byte randomNum3 = (byte) (3 + (int) (Math.random()*7));
+        byte randomNum4 = (byte) (3 + (int) (Math.random()*7));
         String shortCode = "" + randomUpperCharacter + randomNum1 + randomNum2 + randomNum3 + randomNum4;
         
         // Check if generated ID is valid
@@ -116,7 +123,7 @@ public class HealthKiosk {
         char shiftedLetter= (char) ('A' + (base - 'A' + 2) % 26);
         
         // Generate secure code
-        String secureCode = shiftedLetter + shortCode.substring(3) + "-" + (Math.round(bmi));
+        String secureCode = shiftedLetter + shortCode.substring(3) + "-" + (Math.round(metricData));
         System.out.println("Display Code: " + secureCode);        
 
 
@@ -124,10 +131,12 @@ public class HealthKiosk {
         // Print final short intake slip
         System.out.println( "\nSummary: " + 
             switch (serviceCode) {
-                case 'p', 'P'-> "PHARMACY | ID=" + shortCode + " | Code=" + secureCode;
-                case 't', 'T'-> "TRIAGE | ID=" + shortCode + " | BMI=" + bmi + " | Code=" + secureCode;
-                case 'l', 'L'-> "LAB | ID=" + shortCode + " | Code=" + secureCode;
-                case 'c', 'C'-> "COUNSELLING | ID=" + shortCode + " | Code=" + secureCode;
+                case 'P'-> "PHARMACY | ID=" + shortCode + " | Code=" + secureCode;
+                case 'T'-> {if (healthMetric == 1) yield "TRIAGE | ID=" + shortCode + " | BMI=" + metricData + " | Code=" + secureCode;
+                           else if (healthMetric == 1) yield "TRIAGE | ID=" + shortCode + " | Tablets=" + metricData + " | Code=" + secureCode;
+                           else yield "TRIAGE | ID=" + shortCode + " | sin(angle)=" + metricData + " | Code=" + secureCode;}
+                case 'L'-> "LAB | ID=" + shortCode + " | Code=" + secureCode;
+                case 'C'-> "COUNSELLING | ID=" + shortCode + " | Code=" + secureCode;
                 default -> "Invalid service code"; 
             }
         );
